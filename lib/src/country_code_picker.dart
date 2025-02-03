@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:country_code_picker_plus/src/country_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:country_code_picker_plus/src/constants.dart';
 import 'package:country_code_picker_plus/src/country_code_picker_dialog.dart';
@@ -142,8 +141,7 @@ class CountryCodePicker extends StatefulWidget {
     this.dialogBackgroundColor,
     this.closeIcon = const Icon(Icons.close),
     this.countryList = countryCodes,
-    this.dialogItemPadding =
-        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+    this.dialogItemPadding = const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
     this.searchPadding = const EdgeInsets.symmetric(horizontal: 24),
     super.key,
     this.mode = CountryCodePickerMode.dialog,
@@ -167,16 +165,14 @@ class CountryCodePicker extends StatefulWidget {
   State<StatefulWidget> createState() {
     List<Map<String, String>> jsonList = countryList;
 
-    List<Country> elements =
-        jsonList.map((json) => Country.fromJson(json)).toList();
+    List<Country> elements = jsonList.map((json) => Country.fromJson(json)).toList();
 
     if (comparator != null) {
       elements.sort(comparator);
     }
 
     if (countryFilter != null && countryFilter!.isNotEmpty) {
-      final uppercaseCustomList =
-          countryFilter!.map((criteria) => criteria.toUpperCase()).toList();
+      final uppercaseCustomList = countryFilter!.map((criteria) => criteria.toUpperCase()).toList();
       elements = elements
           .where((criteria) =>
               uppercaseCustomList.contains(criteria.code) ||
@@ -193,7 +189,6 @@ class CountryCodePickerState extends State<CountryCodePicker> {
   Country? selectedItem;
   List<Country> elements = [];
   List<Country> favoriteElements = [];
-  late List<Country> localizedElements; // Store localized country list
 
   CountryCodePickerState(this.elements);
 
@@ -221,11 +216,9 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                         children: [
                           if (widget.showFlag)
                             Container(
-                              margin: const EdgeInsets.only(right: 8.0),
+                              margin: const EdgeInsets.only(right: 0.0),
                               decoration: widget.flagDecoration,
-                              clipBehavior: widget.flagDecoration == null
-                                  ? Clip.none
-                                  : Clip.hardEdge,
+                              clipBehavior: widget.flagDecoration == null ? Clip.none : Clip.hardEdge,
                               child: Image.asset(
                                 e.flagUri,
                                 package: 'country_code_picker_plus',
@@ -234,8 +227,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                             ),
                           Text(
                             e.toString(),
-                            style: widget.textStyle ??
-                                Theme.of(context).textTheme.labelLarge,
+                            style: widget.textStyle ?? Theme.of(context).textTheme.labelLarge,
                           ),
                         ],
                       ),
@@ -268,20 +260,14 @@ class CountryCodePickerState extends State<CountryCodePicker> {
             direction: Axis.horizontal,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              if (widget.showFlagMain != null
-                  ? widget.showFlagMain!
-                  : widget.showFlag)
+              if (widget.showFlagMain != null ? widget.showFlagMain! : widget.showFlag)
                 Flexible(
                   flex: widget.alignLeft ? 0 : 1,
                   fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
                   child: Container(
-                    clipBehavior: widget.flagDecoration == null
-                        ? Clip.none
-                        : Clip.hardEdge,
+                    clipBehavior: widget.flagDecoration == null ? Clip.none : Clip.hardEdge,
                     decoration: widget.flagDecoration,
-                    margin: widget.alignLeft
-                        ? const EdgeInsets.only(right: 16.0, left: 8.0)
-                        : const EdgeInsets.only(right: 16.0),
+                    margin: widget.alignLeft ? const EdgeInsets.only(right: 0.0, left: 0.0) : const EdgeInsets.only(right: 0.0),
                     child: Image.asset(
                       selectedItem!.flagUri,
                       package: 'country_code_picker_plus',
@@ -291,24 +277,21 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                 ),
               if (!widget.hideMainText)
                 Flexible(
-                  fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
-                  child: Text(
-                    widget.showOnlyCountryWhenClosed
-                        ? selectedItem!.toCountryStringOnly()
-                        : selectedItem.toString(),
-                    style: widget.textStyle ??
-                        Theme.of(context).textTheme.labelLarge,
-                    overflow: widget.textOverflow,
-                  ),
-                ),
+                    fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 2.0),
+                      child: Text(
+                        widget.showOnlyCountryWhenClosed ? selectedItem!.toCountryStringOnly() : selectedItem.toString(),
+                        style: widget.textStyle ?? Theme.of(context).textTheme.labelLarge,
+                        overflow: widget.textOverflow,
+                      ),
+                    )),
               if (widget.showDropDownButton)
                 Flexible(
                   flex: widget.alignLeft ? 0 : 1,
                   fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
                   child: Padding(
-                      padding: widget.alignLeft
-                          ? const EdgeInsets.only(right: 16.0, left: 8.0)
-                          : const EdgeInsets.only(right: 16.0),
+                      padding: widget.alignLeft ? const EdgeInsets.only(right: 0.0, left: 0.0) : const EdgeInsets.only(right: 0.0),
                       child: widget.icon ??
                           Icon(
                             Icons.arrow_drop_down,
@@ -327,20 +310,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateLocalizedList();
     _onInit(selectedItem);
-  }
-
-  void _updateLocalizedList() {
-    final localizations = CountryLocalizations.of(context);
-
-    if (localizations != null) {
-      // Create new list with localized names
-
-      for (var country in elements) {
-        country.name = localizations.getCountryName(country.code);
-      }
-    }
   }
 
   @override
@@ -351,11 +321,9 @@ class CountryCodePickerState extends State<CountryCodePicker> {
       if (widget.initialSelection != null) {
         selectedItem = elements.firstWhere(
             (criteria) =>
-                (criteria.code.toUpperCase() ==
-                    widget.initialSelection!.toUpperCase()) ||
+                (criteria.code.toUpperCase() == widget.initialSelection!.toUpperCase()) ||
                 (criteria.dialCode == widget.initialSelection) ||
-                (criteria.name.toUpperCase() ==
-                    widget.initialSelection!.toUpperCase()),
+                (criteria.name.toUpperCase() == widget.initialSelection!.toUpperCase()),
             orElse: () => elements[0]);
       } else {
         selectedItem = elements[0];
@@ -371,11 +339,9 @@ class CountryCodePickerState extends State<CountryCodePicker> {
     if (widget.initialSelection != null) {
       selectedItem = elements.firstWhere(
           (item) =>
-              (item.code.toUpperCase() ==
-                  widget.initialSelection!.toUpperCase()) ||
+              (item.code.toUpperCase() == widget.initialSelection!.toUpperCase()) ||
               (item.dialCode == widget.initialSelection) ||
-              (item.name.toUpperCase() ==
-                  widget.initialSelection!.toUpperCase()),
+              (item.name.toUpperCase() == widget.initialSelection!.toUpperCase()),
           orElse: () => elements[0]);
     } else {
       selectedItem = elements[0];
@@ -425,7 +391,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
 
   Future<dynamic> _showCountryCodeDialog() async {
     return await showDialog(
-      barrierColor: widget.barrierColor ?? Colors.grey.withValues(alpha: 0.5),
+      barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
       context: context,
       builder: (context) => Center(
         child: Dialog(
